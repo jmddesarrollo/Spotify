@@ -1,0 +1,10 @@
+{
+  "development": {
+    "autocommit": false,
+    "database": "bd_spotify",
+    "dialect": "mysql",
+    "host": "localhost",
+    "password": "",
+    "username": "root"
+  }
+}
