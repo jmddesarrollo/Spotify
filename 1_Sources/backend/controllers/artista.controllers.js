@@ -64,7 +64,7 @@ function getArtistas(req, res) {
 }
 
 /*
- * Añadir nueva estructura empresa
+ * Añadir nueva artista
  */
 function nuevoArtista(req, res) {
     var artista = new Artista;
@@ -87,115 +87,69 @@ function nuevoArtista(req, res) {
     });
 }
 
-function loginUsuario(req, res) {
+
+/*
+ * Modificar un artista
+ */
+function editArtista(req, res) {
+    var artistaId = req.params.id;
     var params = req.body;
 
-    var email = params.email;
-    var contrasenha = params.contrasenha;
-
-    Usuario.find({
-        where: { email: email }
-    })
-        .then(function (usuario) {
-            if (usuario) {
-                bcrypt.compare(contrasenha, usuario.contrasenha, function (err, check) {
-                    if (check) {
-                        // Devolver los datos del usuario logueado
-                        if (params.gethash) {
-                            // Devolver un token de jwt
-                            res.status(200).send({ token: jwt.createToken(usuario) });
-                        } else {
-                            res.status(200).send({ usuario });
-                        }
-                    } else {
-                        res.status(404).send({ mensaje: "La contraseña es incorrecta." });
-                    }
-                });
-
-            } else {
-                res.status(404).send({ mensaje: "No se ha encontrado ningún usuario con ese email." });
-            }
-        })
-        .catch(function (error) {
-            console.log("Error producido en loginUsuario: " + error);
-            res.status(500).send({ mensaje: "Error al recuperar datos del usuario.", error: error });
-        });
-}
-
-function editUsuario(req, res) {
-    var usuarioId = req.params.id;
-    var params = req.body;
-
-    Usuario.findById(usuarioId)
-        .then(function (usuario) {
-            if (usuario) {
-                if (params.contrasenha) {
-                    bcrypt.hash(params.contrasenha, null, null, function (err, hash) {
-                        usuario.contrasenha = hash;
-
-                        if (params.nombre) {
-                            usuario.nombre = params.nombre;
-                        }
-                        if (params.apellidos) {
-                            usuario.apellidos = params.apellidos;
-                        }
-                        if (params.email) {
-                            usuario.email = params.email;
-                        }
-                        if (params.rol) {
-                            usuario.rol = params.rol;
-                        }
-                        if (params.imagen) {
-                            usuario.imagen = params.imagen;
-                        }
-                        // save recibe una función callback, con el posible error y el objeto que guarda.
-                        usuario.save()
-                            .then(function (usuario) {
-                                res.status(200).send({ usuario });
-                            })
-                            .catch(function (error) {
-                                console.log("Error producido en editUsuario: " + error);
-                                res.status(500).send({ mensaje: "Se ha producido un error al editar un usuario.", error: error });
-                            });
-                    });
-                } else {
-                    if (params.nombre) {
-                        usuario.nombre = params.nombre;
-                    }
-                    if (params.apellidos) {
-                        usuario.apellidos = params.apellidos;
-                    }
-                    if (params.email) {
-                        usuario.email = params.email;
-                    }
-                    if (params.rol) {
-                        usuario.rol = params.rol;
-                    }
-                    if (params.imagen) {
-                        usuario.imagen = params.imagen;
-                    }
-                    // save recibe una función callback, con el posible error y el objeto que guarda.
-                    usuario.save()
-                        .then(function (usuario) {
-                            res.status(200).send({ usuario });
-                        })
-                        .catch(function (error) {
-                            console.log("Error producido en editUsuario: " + error);
-                            res.status(500).send({ mensaje: "Se ha producido un error al editar un usuario.", error: error });
-                        });
+    Artista.findById(artistaId)
+        .then(function (artista) {
+            if (artista) {
+                if (params.nombre) {
+                    artista.nombre = params.nombre;
                 }
+                if (params.descripcion) {
+                    artista.descripcion = params.descripcion;
+                }
+                if (params.imagen) {
+                    artista.imagen = params.imagen;
+                }
+                // save recibe una función callback, con el posible error y el objeto que guarda.
+                artista.save()
+                    .then(function (artista) {
+                        res.status(200).send({ artista });
+                    })
+                    .catch(function (error) {
+                        console.log("Error producido en editArtista: " + error);
+                        res.status(500).send({ mensaje: "Se ha producido un error al editar el artista.", error: error });
+                    });
+                
             } else {
-                res.status(404).send({ mensaje: "No se ha encontrado el usuario a editar." });
+                res.status(404).send({ mensaje: "No se ha encontrado el artista a editar." });
             }
         })
         .catch(function (error) {
-            console.log("Error producido en editUsuario: " + error);
-            res.status(500).send({ mensaje: "Error al recuperar el usuario.", error: error });
+            console.log("Error producido en editArtista: " + error);
+            res.status(500).send({ mensaje: "Error al recuperar el artista.", error: error });
         });
 }
 
+/*
+ * Eliminación de artista
+ */
+function delArtista(req, res) {
+    var artistaId = req.params.id;
+
+    Artista.destroy({ where: { id: artistaId } })
+        .then(function (count) {
+            if (count[0] == 0) {
+                res.status(404).send({ message: "No se ha encontrado artista a eliminar.", count: count });
+            } else {
+                res.status(200).send({ artistaId: artistaId, count: count });
+            }
+        })
+        .catch(function (error) {
+            console.log("Error producido deleteArtista: " + error);
+            res.status(500).send({ message: "Se ha producido un error al eliminar el artista.", error: error });
+        });
+}
+
+// Subir imagen de artista
 function uploadImagen(req, res) {
-    var usuarioId = req.params.id;
+    var artistaId = req.params.id;
     var file_nombre = 'No subido ...';
 
     if (req.files) {
@@ -206,27 +160,27 @@ function uploadImagen(req, res) {
         var file_ext = name_split[1];
 
         if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'jpeg') {
-            Usuario.findById(usuarioId)
-                .then(function (usuario) {
-                    if (usuario) {
-                        usuario.imagen = file_nombre;
+            Artista.findById(artistaId)
+                .then(function (artista) {
+                    if (artista) {
+                        artista.imagen = file_nombre;
 
                         // save recibe una función callback, con el posible error y el objeto que guarda.
-                        usuario.save()
-                            .then(function (usuario) {
-                                res.status(200).send({ usuario });
+                        artista.save()
+                            .then(function (artista) {
+                                res.status(200).send({ artista });
                             })
                             .catch(function (error) {
                                 console.log("Error producido en uploadImagen: " + error);
                                 res.status(500).send({ mensaje: "Se ha producido un error al guardar nombre de imagen.", error: error });
                             });
                     } else {
-                        res.status(404).send({ mensaje: "No se ha encontrado el usuario a editar." });
+                        res.status(404).send({ mensaje: "No se ha encontrado el artista." });
                     }
                 })
                 .catch(function (error) {
                     console.log("Error producido en updateImagen: " + error);
-                    res.status(500).send({ mensaje: "Error al recuperar el usuario.", error: error });
+                    res.status(500).send({ mensaje: "Error al recuperar el artista.", error: error });
                 });
         } else {
             res.status(200).send({ mensaje: 'Extensión no válida.' });
@@ -238,7 +192,7 @@ function uploadImagen(req, res) {
 
 function getImagenFile(req, res) {
     var imagenFile = req.params.imagenFile;
-    var rutaImagen = './uploads/usuarios/' + imagenFile;
+    var rutaImagen = './uploads/artistas/' + imagenFile;
 
     fs.exists(rutaImagen, function (exists) {
         if (exists) {
@@ -253,8 +207,9 @@ module.exports = {
     getArtista,
     getArtistas,
     nuevoArtista,
-    loginUsuario,
-    editUsuario,
+    editArtista,
+    delArtista,
+
     uploadImagen,
     getImagenFile
 }
