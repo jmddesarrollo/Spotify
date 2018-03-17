@@ -48,19 +48,35 @@ function getAlbum(req, res) {
  * Consultar todos los albums.
  */
 function getAlbums(req, res) {
+    var artistaId = req.params.id;
 
-    Album.findAll({ order: [['anho', 'ASC'], ['titulo', 'ASC']] })
-        .then(function (albums) {
-            if (!albums) {
-                res.status(404).send({ mensaje: "No se ha encontrado ningún album." });
-            } else {
-                res.status(200).send({ albums });
-            }
-        })
-        .catch(function (error) {
-            console.log("Error producido en getAlbums: " + error);
-            res.status(500).send({ mensaje: "Error al recuperar datos de los albums.", error: error });
-        });
+    if (artistaId) {
+        Album.findAll({ where: {artista_id: artistaId}, order: [['anho', 'ASC'], ['titulo', 'ASC']] })
+            .then(function (albums) {
+                if (!albums) {
+                    res.status(404).send({ mensaje: "No se ha encontrado ningún album." });
+                } else {
+                    res.status(200).send({ albums });
+                }
+            })
+            .catch(function (error) {
+                console.log("Error producido en getAlbums: " + error);
+                res.status(500).send({ mensaje: "Error al recuperar datos de los albums.", error: error });
+            });
+    } else {
+        Album.findAll({ order: [['anho', 'ASC'], ['titulo', 'ASC']] })
+            .then(function (albums) {
+                if (!albums) {
+                    res.status(404).send({ mensaje: "No se ha encontrado ningún album." });
+                } else {
+                    res.status(200).send({ albums });
+                }
+            })
+            .catch(function (error) {
+                console.log("Error producido en getAlbums: " + error);
+                res.status(500).send({ mensaje: "Error al recuperar datos de los albums.", error: error });
+            });
+    }
 }
 
 /*
@@ -193,7 +209,7 @@ function uploadImagen(req, res) {
 
 function getImagenFile(req, res) {
     var imagenFile = req.params.imagenFile;
-    var rutaImagen = './uploads/albums/' + imagenFile;
+    var rutaImagen = './uploads/albumes/' + imagenFile;
 
     fs.exists(rutaImagen, function (exists) {
         if (exists) {
