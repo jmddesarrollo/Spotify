@@ -9,6 +9,7 @@ var app = express();
 // Cargar rutas
 var usuario_routes = require('./routes/usuario.routes');
 var artista_routes = require('./routes/artista.routes');
+var album_routes = require('./routes/album.routes');
 
 // Llamar a otro método en Express.
 // Middleware: Antes de recibir http se lanza lo que le indiquemos aquí.
@@ -30,6 +31,7 @@ app.use(function (req, res, next) {
 
 app.use('/api', usuario_routes);
 app.use('/api', artista_routes);
+app.use('/api', album_routes);
 
 // Exportación del modulo para poder ser usado en otro componente.
 module.exports = app;

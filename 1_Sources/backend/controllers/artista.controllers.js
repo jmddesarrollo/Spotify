@@ -45,11 +45,11 @@ function getArtista(req, res) {
 }
 
 /*
- * Consultar todos los usuarios.
+ * Consultar todos los artistas.
  */
 function getArtistas(req, res) {
 
-    Artista.findAll()
+    Artista.findAll({ order: [['nombre', 'ASC']] })
         .then(function (artistas) {
             if (!artistas) {
                 res.status(404).send({ mensaje: "No se ha encontrado ningún artista." });
@@ -209,7 +209,6 @@ module.exports = {
     nuevoArtista,
     editArtista,
     delArtista,
-
     uploadImagen,
     getImagenFile
 }
