@@ -197,7 +197,7 @@ function uploadImagen(req, res) {
                         // save recibe una función callback, con el posible error y el objeto que guarda.
                         usuario.save()
                             .then(function (usuario) {
-                                res.status(200).send({ usuario });
+                                res.status(200).send({ imagen: file_nombre, usuario });
                             })
                             .catch(function (error) {
                                 console.log("Error producido en uploadImagen: " + error);
