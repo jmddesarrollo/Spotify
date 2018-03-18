@@ -16,7 +16,6 @@
       </div>
       <div class="w3-panel w3-red w3-display-container" *ngIf="errorMensaje">
         <span (click)="ocultarError()" class="w3-button w3-red w3-hover-red w3-large w3-display-topright">&times;</span>
-        <h3>Error!</h3>
         <p>Ha ocurrido un error al intentar acceder a la aplicación: {{errorMensaje}}</p>
       </div>
       <div class="w3-container">
@@ -29,7 +28,7 @@
           <p>
             <label>Contraseña:</label>
             <input type="password" #password="ngModel" name="password" [(ngModel)]="usuario.contrasenha" class="w3-input w3-animate-input" required />
-            <span *ngIf="!email.valid && email.touched" class="w3-text-red">El email es obligatorio.</span>
+            <span *ngIf="!email.valid && email.touched" class="w3-text-red">La contraseña es obligatoria.</span>
           </p>
           <p class="w3-center">
             <input type="submit" class="w3-btn w3-blue w3-round" value="Entrar" />            
@@ -42,27 +41,39 @@
       <div class="w3-red w3-round-large w3-center">
         <h1>Regístrate</h1>
       </div>
+      <div class="w3-panel w3-green w3-display-container" *ngIf="mensajeRegistro">
+        <span (click)="ocultarError()" class="w3-button w3-green w3-hover-red w3-large w3-display-topright">&times;</span>
+        <p>{{mensajeRegistro}}</p>
+      </div>
+      <div class="w3-panel w3-red w3-display-container" *ngIf="errorRegistro">
+        <span (click)="ocultarError()" class="w3-button w3-red w3-hover-red w3-large w3-display-topright">&times;</span>
+        <p>{{errorRegistro}}</p>
+      </div>
       <div class="w3-container">
-        <form>
+        <form #registerForm="ngForm" (ngSubmit)="onSubmitRegistro()">
           <p>
             <label>Nombre:</label>
-            <input type="text" class="w3-input w3-animate-input" required />
+            <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="usuario_registro.nombre" class="w3-input w3-animate-input" required />
+            <span *ngIf="!nombre.valid && nombre.touched" class="w3-text-red">El nombre es obligatorio.</span>
           </p>
           <p>
             <label>Apellidos:</label>
-            <input type="text" class="w3-input w3-animate-input" required />
+            <input type="text" name="apellidos" #apellidos="ngModel" [(ngModel)]="usuario_registro.apellidos" class="w3-input w3-animate-input" required />
+            <span *ngIf="!apellidos.valid && apellidos.touched" class="w3-text-red">El apellido es obligatorio.</span>
           </p>
           <p>
             <label>Correo electrónico:</label>
-            <input type="text" class="w3-input w3-animate-input" required />
+            <input type="email" name="email" #email="ngModel" [(ngModel)]="usuario_registro.email" class="w3-input w3-animate-input" required />
+            <span *ngIf="!email.valid && email.touched" class="w3-text-red">El email es obligatorio.</span>
           </p>
           <p>
             <label>Contraseña:</label>
-            <input type="password" class="w3-input w3-animate-input" required />
+            <input type="password" name="password" #password="ngModel" [(ngModel)]="usuario_registro.contrasenha" class="w3-input w3-animate-input" required />
+            <span *ngIf="!email.valid && email.touched" class="w3-text-red">La contraseña es obligatoria.</span>
           </p>
           <p class="w3-center">
             <input type="submit" class="w3-btn w3-green w3-round" value="Registrarse" />
-          </p>          
+          </p>
         </form>
       </div>
     </div>

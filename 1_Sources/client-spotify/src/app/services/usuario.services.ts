@@ -16,18 +16,6 @@ export class UsuarioService {
     this.url = GLOBAL.url;
   }
 
-  signup(usuario_to_login, gethash = null) {
-    if (gethash) {
-      usuario_to_login.gethash = gethash;
-    }
-
-    const json = JSON.stringify(usuario_to_login);
-    const params = json;
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-
-    return this._http.post(this.url + 'login', params, { headers: headers }).map(res => res.json());
-  }
-
   getIdentity() {
     let identity = JSON.parse(localStorage.getItem('identity'));
 
@@ -50,6 +38,26 @@ export class UsuarioService {
     }
     return this.token;
   }
+
+  signup(usuario_to_login, gethash = null) {
+    if (gethash) {
+      usuario_to_login.gethash = gethash;
+    }
+
+    const params = JSON.stringify(usuario_to_login);
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+
+    return this._http.post(this.url + 'login', params, { headers: headers }).map(res => res.json());
+  }
+
+  registro(usuario_registro) {
+    const params = JSON.stringify(usuario_registro);
+    const headers = new Headers({ 'Content-Type': 'application/json' });
+
+    return this._http.post(this.url + 'usuario', params, { headers: headers }).map(res => res.json());
+  }
+
+
 
   //getEstructuraEmpresas() {
   //  return this._http.get(this.url + 'estructuraempresas').map(res => res.json());

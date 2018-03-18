@@ -48,26 +48,39 @@ function nuevoUsuario(req, res) {
 
     var params = req.body;
 
-    if (params.contrasenha) {        
-        bcrypt.hash(params.contrasenha, null, null, function (err, hash) {
-            Usuario.create({
-                nombre: params.nombre,
-                apellidos: params.apellidos,
-                email: params.email,
-                contrasenha: hash,
-                rol: 'usuario',
-                imagen: null
-            }).then(function (usuario_save) {
-                res.status(200).send({ usuario_save });
-            }).catch(function (error) {
-                console.log("Error producido usuario: saveUsuario " + error);
-                res.status(500).send({ mensaje: "Se ha producido un error al añadir un usuario.", error: error });
-            });
+    Usuario.find({
+        where: { email: params.email }
+    })
+        .then(function (usuario) {
+            if (usuario) {
+                res.status(500).send({ mensaje: 'Error: El usuario ya existe.' });
+            } else {
+                if (params.contrasenha) {
+                    bcrypt.hash(params.contrasenha, null, null, function (err, hash) {
+                        Usuario.create({
+                            nombre: params.nombre,
+                            apellidos: params.apellidos,
+                            email: params.email,
+                            contrasenha: hash,
+                            rol: 'usuario',
+                            imagen: null
+                        }).then(function (usuario) {
+                            res.status(200).send({ usuario });
+                        }).catch(function (error) {
+                            console.log("Error producido usuario: saveUsuario " + error);
+                            res.status(500).send({ mensaje: "Se ha producido un error al añadir un usuario.", error: error });
+                        });
+                    });
+
+                } else {
+                    res.status(500).send({ mensaje: 'Se necesita contraseña.' });
+                }
+            }
+        })
+        .catch(function (error) {
+            console.log("Error producido en loginUsuario: " + error);
+            res.status(500).send({ mensaje: "Error al recuperar datos del usuario.", error: error });
         });
-  
-    } else {
-        res.status(500).send({ message: 'Se necesita contraseña.' });
-    }
 }
 
 function loginUsuario(req, res) {

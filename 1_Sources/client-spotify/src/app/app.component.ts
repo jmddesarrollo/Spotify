@@ -14,16 +14,20 @@ import { NgLocaleLocalization } from '@angular/common/src/i18n/localization';
 export class AppComponent implements OnInit {
   public titulo = 'MusicaFy';
   public usuario: Usuario;
+  public usuario_registro: Usuario;
   // Contendrá todo el objeto del usuario logeado. En localStorage guardamos el objeto identity, y al iniciar cualquier petición recogeremos esa información del localStorage.
   public identity;
   // Guardado en localStorage. Se utiliza este objeto para pasarselo al servicio.
   public token;
   public errorMensaje: string;
+  public errorRegistro: string;
+  public mensajeRegistro: string;
 
   constructor(
     private _usuarioService: UsuarioService
   ) {
     this.usuario = new Usuario(null, '', '', '', '', '', '');
+    this.usuario_registro = new Usuario(null, '', '', '', '', '', '');
   }
 
   ngOnInit() {
@@ -32,6 +36,8 @@ export class AppComponent implements OnInit {
   }
 
   onSubmit() {
+    this.ocultarError();
+
     // Conseguir los datos de usuario.
     this._usuarioService.signup(this.usuario).subscribe(
       response => {
@@ -54,6 +60,7 @@ export class AppComponent implements OnInit {
                 alert('El token no se ha generado correctamente.');
               } else {
                 localStorage.setItem('token', token);
+                this.usuario = new Usuario(null, '', '', '', '', '', '');
               }
             },
             error => {
@@ -78,11 +85,40 @@ export class AppComponent implements OnInit {
     );
   }
 
-  ocultarError() {
-    this.errorMensaje = null;
+  onSubmitRegistro() {    
+    this.ocultarError();
+
+    this._usuarioService.registro(this.usuario_registro).subscribe(
+      response => {
+        this.usuario_registro = response.usuario;
+
+        if (this.usuario_registro.id) {
+          this.mensajeRegistro = 'El alta de usuario se ha realizado correctamente. Proceda a loguearse.';
+          this.usuario_registro.contrasenha = '123qwe';
+        } else {
+          this.errorRegistro = 'Error producida en el alta. Proceda a intentarlo.';
+        }
+
+      },
+      error => {
+        this.errorRegistro = <any>error;
+        
+        if (this.errorRegistro) {
+          var body = JSON.parse(error._body);
+
+          this.errorRegistro = body.mensaje;
+        }
+      }
+    );
   }
 
-  logout() {
+  ocultarError() {
+    this.errorMensaje = null;
+    this.errorRegistro = null;
+    this.mensajeRegistro = null;
+  }
+
+  logout() {        
     localStorage.removeItem('identity');
     localStorage.removeItem('token');
 
