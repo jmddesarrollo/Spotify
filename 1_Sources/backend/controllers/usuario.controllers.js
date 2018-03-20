@@ -122,6 +122,11 @@ function editUsuario(req, res) {
     var usuarioId = req.params.id;
     var params = req.body;
 
+    // Comprobar si el usuario a modificar es distinto del usuario conectado
+    if (usuarioId != req.usuario.sub) {
+        return res.status(500).send({ mensaje: "No tienes permiso para modificar este usuario." });
+    } 
+
     Usuario.findById(usuarioId)
         .then(function (usuario) {
             if (usuario) {
@@ -129,19 +134,19 @@ function editUsuario(req, res) {
                     bcrypt.hash(params.contrasenha, null, null, function (err, hash) {
                         usuario.contrasenha = hash;
 
-                        if (params.nombre) {
+                        if (params.nombre != usuario.nombre) {
                             usuario.nombre = params.nombre;
                         }
-                        if (params.apellidos) {
+                        if (params.apellidos != usuario.apellidos) {
                             usuario.apellidos = params.apellidos;
                         }
-                        if (params.email) {
-                            usuario.email = params.email;
+                        if (params.email != usuario.email) {
+                            usuario.email = params.email;                           
                         }
-                        if (params.rol) {
+                        if (params.rol != usuario.rol) {
                             usuario.rol = params.rol;
                         }
-                        if (params.imagen) {
+                        if (params.imagen != usuario.imagen) {
                             usuario.imagen = params.imagen;
                         }
                         // save recibe una función callback, con el posible error y el objeto que guarda.
@@ -151,23 +156,23 @@ function editUsuario(req, res) {
                             })
                             .catch(function (error) {
                                 console.log("Error producido en editUsuario: " + error);
-                                res.status(500).send({ mensaje: "Se ha producido un error al editar un usuario.", error: error });
+                                res.status(500).send({ mensaje: "Error al editar usuario. Seguramente el email ya esté dado de alta.", error: error });
                             });
                     });
                 } else {
-                    if (params.nombre) {
+                    if (params.nombre != usuario.nombre) {
                         usuario.nombre = params.nombre;
                     }
-                    if (params.apellidos) {
+                    if (params.apellidos != usuario.apellidos) {
                         usuario.apellidos = params.apellidos;
                     }
-                    if (params.email) {
+                    if (params.email != usuario.email) {
                         usuario.email = params.email;
                     }
-                    if (params.rol) {
+                    if (params.rol != usuario.rol) {
                         usuario.rol = params.rol;
                     }
-                    if (params.imagen) {
+                    if (params.imagen != usuario.imagen) {
                         usuario.imagen = params.imagen;
                     }
                     // save recibe una función callback, con el posible error y el objeto que guarda.
@@ -177,7 +182,7 @@ function editUsuario(req, res) {
                         })
                         .catch(function (error) {
                             console.log("Error producido en editUsuario: " + error);
-                            res.status(500).send({ mensaje: "Se ha producido un error al editar un usuario.", error: error });
+                            res.status(500).send({ mensaje: "Error al editar usuario. Seguramente el email ya esté dado de alta.", error: error });
                         });
                 }
             } else {

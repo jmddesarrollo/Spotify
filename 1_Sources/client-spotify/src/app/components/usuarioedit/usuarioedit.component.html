@@ -1,0 +1,61 @@
+<div class="w3-container">
+  <!-- Formulario -->
+  <div id="div-form-edit" class="w3-panel w3-card w3-round-large">
+    <div class="w3-green w3-round-large w3-center">
+      <h1>{{titulo}}</h1>
+    </div>
+    <div class="w3-panel w3-green w3-display-container" *ngIf="mensajeEdicion">
+      <span (click)="ocultarError()" class="w3-button w3-green w3-hover-green w3-large w3-display-topright">&times;</span>
+      <p>{{mensajeEdicion}}</p>
+    </div>
+    <div class="w3-panel w3-red w3-display-container" *ngIf="errorEdicion">
+      <span (click)="ocultarError()" class="w3-button w3-red w3-hover-red w3-large w3-display-topright">&times;</span>
+      <p>{{errorEdicion}}</p>
+    </div>
+    <div class="w3-container">
+      <form #usuarioeditForm="ngForm" (ngSubmit)="onSubmit()">
+        <p>
+          <label>Nombre:</label>
+          <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="usuario.nombre" class="w3-input w3-animate-input" required />
+          <span *ngIf="!nombre.valid && nombre.touched" class="w3-text-red">El nombre es obligatorio.</span>
+        </p>
+        <p>
+          <label>Apellidos:</label>
+          <input type="text" name="apellidos" #apellidos="ngModel" [(ngModel)]="usuario.apellidos" class="w3-input w3-animate-input" required />
+          <span *ngIf="!apellidos.valid && apellidos.touched" class="w3-text-red">El apellido es obligatorio.</span>
+        </p>
+        <p>
+          <label>Correo electrónico:</label>
+          <input type="email" name="email" #email="ngModel" [(ngModel)]="usuario.email" class="w3-input w3-animate-input" required />
+          <span *ngIf="!email.valid && email.touched" class="w3-text-red">El email es obligatorio.</span>
+        </p>
+
+        <div *ngIf="usuario.imagen && usuario.imagen != 'null'" class="div-imagen">
+          <img src="{{url}}get-imagen-usuario/{{usuario.imagen}}" />
+        </div>
+
+        <p>
+          <label>Subir imagen de usuario:</label>
+          <input type="file" placeholder="Subir imagen..." (change)="fileChangeEvent($event)" />          
+        </p>
+
+        <!--
+  <p>
+    <label>Contraseña:</label>
+    <input type="password" name="password" #password="ngModel" [(ngModel)]="usuario.contrasenha" class="w3-input w3-animate-input" required />
+    <span *ngIf="!password.valid && password.touched" class="w3-text-red">La contraseña es obligatoria.</span>
+  </p>
+  <p>
+    <label>Repetir Contraseña:</label>
+    <input type="password" name="password_repeat" #password_repeat="ngModel" [(ngModel)]="usuario.contrasenha" class="w3-input w3-animate-input" required />
+    <span *ngIf="!password_repeat.valid && password_repeat.touched" class="w3-text-red">La repetición de contraseña es obligatoria.</span>
+  </p>
+      -->
+
+        <p class="w3-center">
+          <input type="submit" class="w3-btn w3-green w3-round" value="Modificar mis datos" />
+        </p>
+      </form>
+    </div>
+  </div>
+</div>

@@ -57,6 +57,13 @@ export class UsuarioService {
     return this._http.post(this.url + 'usuario', params, { headers: headers }).map(res => res.json());
   }
 
+  editUsuario(usuario) {
+    const params = JSON.stringify(usuario);
+    const headers = new Headers({ 'Content-Type': 'application/json' , 'Authorization': this.getToken() });
+
+    return this._http.put(this.url + 'usuario/' + usuario.id, params, { headers: headers }).map(res => res.json());
+  }
+
 
 
   //getEstructuraEmpresas() {

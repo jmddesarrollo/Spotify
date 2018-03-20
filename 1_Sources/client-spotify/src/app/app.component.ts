@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { GLOBAL } from './services/global';
+
 // Importar modelos
 import { Usuario } from './models/usuario';
 import { UsuarioService } from './services/usuario.services';
@@ -22,17 +24,25 @@ export class AppComponent implements OnInit {
   public errorMensaje: string;
   public errorRegistro: string;
   public mensajeRegistro: string;
+  public boolOcultaMenu: boolean;
+  public url: string;
 
   constructor(
     private _usuarioService: UsuarioService
   ) {
     this.usuario = new Usuario(null, '', '', '', '', '', '');
     this.usuario_registro = new Usuario(null, '', '', '', '', '', '');
+    this.boolOcultaMenu = false;
+    this.url = GLOBAL.url;
   }
 
   ngOnInit() {
     this.identity = this._usuarioService.getIdentity();
     this.token = this._usuarioService.getToken();
+  }
+
+  mostrarMenu(valor) {
+    this.boolOcultaMenu = valor;
   }
 
   onSubmit() {

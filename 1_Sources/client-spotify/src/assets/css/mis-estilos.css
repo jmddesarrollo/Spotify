@@ -1,0 +1,50 @@
+#div-contenedor{
+  margin-top: 50px;
+}
+
+#div-form-edit {
+  max-width: 600px;
+}
+
+.div-imagen img {
+  width: 150px;
+}
+
+#div-titulo {
+  position: fixed;
+  top: 0px;
+  width: 100%;
+}
+
+#contenedor-menu {
+  margin-top: -43px;
+}
+
+#contenedor-menu div {
+  cursor: pointer;
+  padding: 10px 10px;
+}
+
+.menu {
+  padding-left: 15px;
+}
+
+.fa {
+  width: 25px;
+}
+
+.intro-app {
+  width: 600px;
+}
+
+#img-logged {
+  width: 45px;
+}
+
+.cursor{
+  cursor: pointer;
+}
+
+.info-log{
+  margin-right: 10px;
+}

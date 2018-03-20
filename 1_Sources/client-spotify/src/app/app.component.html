@@ -1,83 +1,130 @@
-<div>
-  <div class="w3-center">
-    <h1>{{titulo}}</h1>
+  <!-- Panel Título con proyecto seleccionado -->
+  <div class="w3-blue w3-container w3-center" id="div-titulo">
+    <h4>
+      <i class="fa fa-codiepie"></i>
+      MusicFy
+      <button class="cursor w3-right info-log" (click)="logout()" title="Cerrar sesión"><i class="fa fa-sign-out"></i></button>
+      <span *ngIf="identity" id="identity_name" class="w3-right info-log">
+        {{identity.nombre}}
+      </span>
+      <img src="{{url}}get-imagen-usuario/{{identity.imagen}}" id="img-logged" class="w3-circle w3-right info-log" />
+    </h4>
   </div>
 
-  <div *ngIf="identity">
-    <p>Estas logueado en la aplicación.</p>
-    <button class="w3-btn w3-orange w3-round" (click)="logout()">Cerrar sesión</button>
-  </div>
-  
-
-  <div *ngIf="!identity" class="w3-container w3-row">
-    <div class="w3-half w3-panel w3-card">
-      <div class="w3-blue w3-round-large w3-center">
-        <h1>Identifícate</h1>
+  <div>
+    <!-- Panel Lateral Izquierdo con menu de accesos a secciones del proyecto -->
+    <div id="contenedor-menu" class="w3-light-grey w3-sidebar" *ngIf="identity" [style.width]="(boolOcultaMenu) ? '55px' : '170px'" >
+      <div (click)="mostrarMenu(!boolOcultaMenu)" class="btn-cursor w3-blue">
+        <i class="fa fa-lg fa-angle-double-right" *ngIf="boolOcultaMenu"></i>
+        <i class="fa fa-lg fa-angle-double-left w3-right" *ngIf="!boolOcultaMenu"></i>&nbsp;
       </div>
-      <div class="w3-panel w3-red w3-display-container" *ngIf="errorMensaje">
-        <span (click)="ocultarError()" class="w3-button w3-red w3-hover-red w3-large w3-display-topright">&times;</span>
-        <p>Ha ocurrido un error al intentar acceder a la aplicación: {{errorMensaje}}</p>
+      <div class="w3-hover-pale-blue">
+        <i class="fa fa-lg fa-info-circle" title="Artistas"></i>
+        <span class="menu" *ngIf="!boolOcultaMenu">Artistas</span>
       </div>
-      <div class="w3-container">
-        <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
-          <p>
-            <label>Correo electrónico:</label>
-            <input type="email" #email="ngModel" name="email" [(ngModel)]="usuario.email" class="w3-input w3-animate-input" required />
-            <span *ngIf="!email.valid && email.touched" class="w3-text-red">El email es obligatorio.</span>
-          </p>
-          <p>
-            <label>Contraseña:</label>
-            <input type="password" #password="ngModel" name="password" [(ngModel)]="usuario.contrasenha" class="w3-input w3-animate-input" required />
-            <span *ngIf="!email.valid && email.touched" class="w3-text-red">La contraseña es obligatoria.</span>
-          </p>
-          <p class="w3-center">
-            <input type="submit" class="w3-btn w3-blue w3-round" value="Entrar" />            
-          </p>          
-        </form>
+      <div class="w3-hover-pale-blue">
+        <i class="fa fa-lg fa-cogs" title="Albumes"></i>
+        <span class="menu" *ngIf="!boolOcultaMenu">Albumes</span>
+      </div>
+      <div class="w3-hover-pale-blue">
+        <a [routerLink]="['/mis-datos']">
+          <i class="fa fa-lg fa-signal" title="Mis datos"></i>
+          <span class="menu" *ngIf="!boolOcultaMenu">Mis datos</span>
+        </a>
+      </div>
+      <div class="w3-hover-pale-blue">
+        <i class="fa fa-lg fa-bullhorn" title="Noticias"></i>
+        <span class="menu" *ngIf="!boolOcultaMenu">Noticias</span>
+      </div>
+      <div class="w3-hover-pale-blue">
+        <i class="fa fa-lg fa-users" title="Recursos"></i>
+        <span class="menu" *ngIf="!boolOcultaMenu">Recursos</span>
+      </div>
+      <div class="w3-hover-pale-blue">
+        <i class="fa fa-lg fa-archive" title="Adjuntos"></i>
+        <span class="menu" *ngIf="!boolOcultaMenu">Adjuntos</span>
+      </div>
+      <div class="w3-hover-pale-blue">
+        <i class="fa fa-lg fa-file" title="Informes"></i>
+        <span class="menu" *ngIf="!boolOcultaMenu">Informes</span>
       </div>
     </div>
+    <!-- Final del Panel Lateral Izquierdo -->
 
-    <div class="w3-half w3-panel w3-card">
-      <div class="w3-red w3-round-large w3-center">
-        <h1>Regístrate</h1>
+    <div *ngIf="identity" [style.padding-left]="(boolOcultaMenu) ? '60px' : '180px'" id="div-contenedor">            
+      <router-outlet></router-outlet>
+    </div>
+
+
+    <div *ngIf="!identity" class="w3-container w3-row" [style.padding-left]="(boolOcultaMenu) ? '60px' : '180px'">
+      <div class="w3-half w3-panel w3-card intro-app">
+        <div class="w3-blue w3-round-large w3-center">
+          <h1>Identifícate</h1>
+        </div>
+        <div class="w3-panel w3-red w3-display-container" *ngIf="errorMensaje">
+          <span (click)="ocultarError()" class="w3-button w3-red w3-hover-red w3-large w3-display-topright">&times;</span>
+          <p>Ha ocurrido un error al intentar acceder a la aplicación: {{errorMensaje}}</p>
+        </div>
+        <div class="w3-container">
+          <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+            <p>
+              <label>Correo electrónico:</label>
+              <input type="email" #email="ngModel" name="email" [(ngModel)]="usuario.email" class="w3-input w3-animate-input" required />
+              <span *ngIf="!email.valid && email.touched" class="w3-text-red">El email es obligatorio.</span>
+            </p>
+            <p>
+              <label>Contraseña:</label>
+              <input type="password" #password="ngModel" name="password" [(ngModel)]="usuario.contrasenha" class="w3-input w3-animate-input" required />
+              <span *ngIf="!password.valid && password.touched" class="w3-text-red">La contraseña es obligatoria.</span>
+            </p>
+            <p class="w3-center">
+              <input type="submit" class="w3-btn w3-blue w3-round" value="Entrar" />
+            </p>
+          </form>
+        </div>
       </div>
-      <div class="w3-panel w3-green w3-display-container" *ngIf="mensajeRegistro">
-        <span (click)="ocultarError()" class="w3-button w3-green w3-hover-red w3-large w3-display-topright">&times;</span>
-        <p>{{mensajeRegistro}}</p>
-      </div>
-      <div class="w3-panel w3-red w3-display-container" *ngIf="errorRegistro">
-        <span (click)="ocultarError()" class="w3-button w3-red w3-hover-red w3-large w3-display-topright">&times;</span>
-        <p>{{errorRegistro}}</p>
-      </div>
-      <div class="w3-container">
-        <form #registerForm="ngForm" (ngSubmit)="onSubmitRegistro()">
-          <p>
-            <label>Nombre:</label>
-            <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="usuario_registro.nombre" class="w3-input w3-animate-input" required />
-            <span *ngIf="!nombre.valid && nombre.touched" class="w3-text-red">El nombre es obligatorio.</span>
-          </p>
-          <p>
-            <label>Apellidos:</label>
-            <input type="text" name="apellidos" #apellidos="ngModel" [(ngModel)]="usuario_registro.apellidos" class="w3-input w3-animate-input" required />
-            <span *ngIf="!apellidos.valid && apellidos.touched" class="w3-text-red">El apellido es obligatorio.</span>
-          </p>
-          <p>
-            <label>Correo electrónico:</label>
-            <input type="email" name="email" #email="ngModel" [(ngModel)]="usuario_registro.email" class="w3-input w3-animate-input" required />
-            <span *ngIf="!email.valid && email.touched" class="w3-text-red">El email es obligatorio.</span>
-          </p>
-          <p>
-            <label>Contraseña:</label>
-            <input type="password" name="password" #password="ngModel" [(ngModel)]="usuario_registro.contrasenha" class="w3-input w3-animate-input" required />
-            <span *ngIf="!email.valid && email.touched" class="w3-text-red">La contraseña es obligatoria.</span>
-          </p>
-          <p class="w3-center">
-            <input type="submit" class="w3-btn w3-green w3-round" value="Registrarse" />
-          </p>
-        </form>
+
+      <div class="w3-half w3-panel w3-card intro-app">
+        <div class="w3-green w3-round-large w3-center">
+          <h1>Regístrate</h1>
+        </div>
+        <div class="w3-panel w3-green w3-display-container" *ngIf="mensajeRegistro">
+          <span (click)="ocultarError()" class="w3-button w3-green w3-hover-green w3-large w3-display-topright">&times;</span>
+          <p>{{mensajeRegistro}}</p>
+        </div>
+        <div class="w3-panel w3-red w3-display-container" *ngIf="errorRegistro">
+          <span (click)="ocultarError()" class="w3-button w3-red w3-hover-red w3-large w3-display-topright">&times;</span>
+          <p>{{errorRegistro}}</p>
+        </div>
+        <div class="w3-container">
+          <form #registerForm="ngForm" (ngSubmit)="onSubmitRegistro()">
+            <p>
+              <label>Nombre:</label>
+              <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="usuario_registro.nombre" class="w3-input w3-animate-input" required />
+              <span *ngIf="!nombre.valid && nombre.touched" class="w3-text-red">El nombre es obligatorio.</span>
+            </p>
+            <p>
+              <label>Apellidos:</label>
+              <input type="text" name="apellidos" #apellidos="ngModel" [(ngModel)]="usuario_registro.apellidos" class="w3-input w3-animate-input" required />
+              <span *ngIf="!apellidos.valid && apellidos.touched" class="w3-text-red">El apellido es obligatorio.</span>
+            </p>
+            <p>
+              <label>Correo electrónico:</label>
+              <input type="email" name="email" #email="ngModel" [(ngModel)]="usuario_registro.email" class="w3-input w3-animate-input" required />
+              <span *ngIf="!email.valid && email.touched" class="w3-text-red">El email es obligatorio.</span>
+            </p>
+            <p>
+              <label>Contraseña:</label>
+              <input type="password" name="password" #password="ngModel" [(ngModel)]="usuario_registro.contrasenha" class="w3-input w3-animate-input" required />
+              <span *ngIf="!password.valid && password.touched" class="w3-text-red">La contraseña es obligatoria.</span>
+            </p>
+            <p class="w3-center">
+              <input type="submit" class="w3-btn w3-green w3-round" value="Registrarse" />
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="w3-clear"></div>
+  <div class="w3-clear"></div>
