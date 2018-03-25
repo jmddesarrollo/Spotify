@@ -1,0 +1,28 @@
+<div *ngIf="identity">
+  <h3>{{titulo}}</h3>
+  <a href="" class="w3-btn w3-blue" *ngIf="identity.rol == 'admin'" [routerLink]="['/crear-artista']">Añadir artista</a>
+
+  <div class="w3-clear"></div>
+  <div class="artistas-list" *ngIf="identity">
+    <div *ngFor="let artista of artistas" class="w3-left artista-item w3-card-4 imagen_artista w3-text-white">
+
+      <img src="{{url + 'get-imagen-artista/' + artista.imagen}}" />
+
+      <div class="artista-nombre w3-container">
+        <a [routerLink]="['/artista',artista.id]">
+          {{artista.nombre}}
+        </a>
+      </div>
+      <div *ngIf="identity.rol == 'admin'" class="w3-center">
+        <div *ngIf="confirmado != artista.id">
+          <a [routerLink]="['/editar-artista',artista.id]" class="w3-btn w3-orange w3-round">Editar</a>
+          <a (click)="onDeleteConfirm(artista.id)" class="w3-btn w3-red w3-round">Eliminar</a>
+        </div>        
+      </div>
+      <div class="seguro w3-center" *ngIf="confirmado == artista.id">
+        <a (click)="onDeleteArtista(artista.id)" class="w3-btn w3-red w3-round">Eliminar</a>
+        <a (click)="onCancelArtista()" class="w3-btn w3-grey w3-round">Cancelar</a>
+      </div>
+    </div>
+  </div>
+</div>

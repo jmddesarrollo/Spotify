@@ -71,6 +71,8 @@ function nuevoArtista(req, res) {
 
     var params = req.body;
 
+    console.log('nuveo');
+
     artista.nombre = params.nombre;
     artista.descripcion = params.descripcion;
     artista.imagen = null;

@@ -1,0 +1,42 @@
+<div class="w3-container" *ngIf="identity">
+  <!-- Formulario -->
+  <div id="div-form-edit" class="w3-panel w3-card w3-round-large">
+    <div class="w3-green w3-round-large w3-center">
+      <h1>{{titulo}}</h1>
+    </div>
+    <div class="w3-panel w3-green w3-display-container" *ngIf="mensajeAccion">
+      <span (click)="ocultarError()" class="w3-button w3-green w3-hover-green w3-large w3-display-topright">&times;</span>
+      <p>{{mensajeAccion}}</p>
+    </div>
+    <div class="w3-panel w3-red w3-display-container" *ngIf="errorAccion">
+      <span (click)="ocultarError()" class="w3-button w3-red w3-hover-red w3-large w3-display-topright">&times;</span>
+      <p>{{errorAccion}}</p>
+    </div>
+
+    <form #formArtista="ngForm" (ngSubmit)="onSubmit()">
+      <p>
+        <label>Nombre:</label>
+        <input type="text" name="nombre" #nombre="ngModel" [(ngModel)]="artista.nombre" required class="w3-input w3-animate-input" />
+        <span *ngIf="!nombre.valid && nombre.touched" class="w3-text-red">El nombre es obligatorio.</span>
+      </p>
+      <p>
+        <label>Descripción:</label>
+        <textarea name="descripcion" #descripcion="ngModel" [(ngModel)]="artista.descripcion" required class="w3-input"></textarea>
+        <span *ngIf="!descripcion.valid && descripcion.touched" class="w3-text-red">La descripción es obligatoria.</span>
+      </p>
+      <div *ngIf="is_edit">
+        <div class="imagen_peque" *ngIf="artista.imagen && artista.imagen != 'null'">
+          <img src="{{ url + 'get-imagen-artista/' + artista.imagen }}" />
+        </div>
+        <p>
+          <label>Sube la imagen del artista</label>
+          <input type="file" placeholder="Subir imagen ..." (change)="fileChangeEvent($event)" />
+        </p>        
+      </div>
+      <p class="w3-center">
+        <input type="submit" value="{{titulo}}" [disabled]="!formArtista.form.valid" class="w3-btn w3-green w3-round" />
+      </p>
+    </form>
+
+    </div>
+  </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { GLOBAL } from './services/global';
 
@@ -28,7 +29,9 @@ export class AppComponent implements OnInit {
   public url: string;
 
   constructor(
-    private _usuarioService: UsuarioService
+    private _usuarioService: UsuarioService,
+    private _route: ActivatedRoute,
+    private _router: Router
   ) {
     this.usuario = new Usuario(null, '', '', '', '', '', '');
     this.usuario_registro = new Usuario(null, '', '', '', '', '', '');
@@ -48,11 +51,15 @@ export class AppComponent implements OnInit {
   onSubmit() {
     this.ocultarError();
 
+    console.log('Conectar');
+
     // Conseguir los datos de usuario.
     this._usuarioService.signup(this.usuario).subscribe(
       response => {
         let identity = response.usuario;
         this.identity = identity;
+
+        console.log(this.identity);
 
         if (!this.identity.id) {
           alert('El usuario no está identificado correctamente.');
@@ -79,6 +86,7 @@ export class AppComponent implements OnInit {
               if (this.errorMensaje) {
                 var body = JSON.parse(error._body);
                 this.errorMensaje = body.mensaje;
+                console.log(error);
               }
             }
           );
@@ -86,7 +94,7 @@ export class AppComponent implements OnInit {
       },
       error => {
         this.errorMensaje = <any>error;
-
+        console.log(error);
         if (this.errorMensaje) {
           var body = JSON.parse(error._body);
           this.errorMensaje = body.mensaje;
@@ -134,5 +142,6 @@ export class AppComponent implements OnInit {
 
     this.identity = null;
     this.token = null;
+    this._router.navigate(['/']);
   }
 }

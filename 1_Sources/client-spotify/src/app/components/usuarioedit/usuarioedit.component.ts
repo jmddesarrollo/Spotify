@@ -38,6 +38,9 @@ export class UsuarioeditComponent implements OnInit {
   onSubmit() {
     this.ocultarError();
 
+    // Aqui no se modifica la contraseña
+    this.usuario.contrasenha = null;
+
     this._usuarioService.editUsuario(this.usuario).subscribe(
       response => {        
         if (!response.usuario) {

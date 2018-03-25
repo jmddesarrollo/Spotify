@@ -7,7 +7,7 @@
       <span *ngIf="identity" id="identity_name" class="w3-right info-log">
         {{identity.nombre}}
       </span>
-      <img src="{{url}}get-imagen-usuario/{{identity.imagen}}" id="img-logged" class="w3-circle w3-right info-log" />
+      <img *ngIf="identity" src="{{url}}get-imagen-usuario/{{identity.imagen}}" id="img-logged" class="w3-circle w3-right info-log" />
     </h4>
   </div>
 
@@ -19,15 +19,17 @@
         <i class="fa fa-lg fa-angle-double-left w3-right" *ngIf="!boolOcultaMenu"></i>&nbsp;
       </div>
       <div class="w3-hover-pale-blue">
-        <i class="fa fa-lg fa-info-circle" title="Artistas"></i>
-        <span class="menu" *ngIf="!boolOcultaMenu">Artistas</span>
+        <a [routerLink]="['/artistas']" [routerLinkActive]="['actived']">
+          <i class="fa fa-lg fa-info-circle" title="Artistas"></i>
+          <span class="menu" *ngIf="!boolOcultaMenu">Artistas</span>
+        </a>
       </div>
       <div class="w3-hover-pale-blue">
         <i class="fa fa-lg fa-cogs" title="Albumes"></i>
         <span class="menu" *ngIf="!boolOcultaMenu">Albumes</span>
       </div>
       <div class="w3-hover-pale-blue">
-        <a [routerLink]="['/mis-datos']">
+        <a [routerLink]="['/mis-datos']" [routerLinkActive]="['actived']">
           <i class="fa fa-lg fa-signal" title="Mis datos"></i>
           <span class="menu" *ngIf="!boolOcultaMenu">Mis datos</span>
         </a>
@@ -51,7 +53,7 @@
     </div>
     <!-- Final del Panel Lateral Izquierdo -->
 
-    <div *ngIf="identity" [style.padding-left]="(boolOcultaMenu) ? '60px' : '180px'" id="div-contenedor">            
+    <div [class.hidden]="!identity" [style.padding-left]="(boolOcultaMenu) ? '60px' : '180px'" id="div-contenedor">            
       <router-outlet></router-outlet>
     </div>
 

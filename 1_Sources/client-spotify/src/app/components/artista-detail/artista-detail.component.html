@@ -1,0 +1,18 @@
+<div id="artista-box" *ngIf="artista && identity" class="w3-container w3-panel w3-card">
+  <div class="w3-left">
+    <img src="{{url + 'get-imagen-artista/' + artista.imagen}}" />
+  </div>
+  
+  <div class="w3-panel w3-left">
+    <h1>{{artista.nombre}}</h1>
+    <p>{{artista.descripcion}}</p>
+    <div *ngIf="identity.rol == 'admin'">
+      <a [routerLink]="['/album',artista.id]" class="w3-btn w3-orange w3-round">Añadir album</a>
+    </div>
+  </div>
+
+  <div class="w3-clear"></div>
+  <div id="galeria_album" *ngIf="albums" class="w3-container w3-panel w3-card">
+
+  </div>
+</div>
