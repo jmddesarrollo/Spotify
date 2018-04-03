@@ -13,7 +13,7 @@ var mw_upload = multipart({ uploadDir: './uploads/albumes' });
 
 // Crear una ruta por GET con express
 api.get('/album/:id', mw_auth.ensureAuth, AlbumController.getAlbum);
-api.get('/albumes/:id?', mw_auth.ensureAuth, AlbumController.getAlbums);
+api.get('/albums/:id?', mw_auth.ensureAuth, AlbumController.getAlbums);
 api.post('/album', mw_auth.ensureAuth, AlbumController.nuevoAlbum);
 api.put('/album/:id', mw_auth.ensureAuth, AlbumController.editAlbum);
 api.delete('/album/:id', mw_auth.ensureAuth, AlbumController.delAlbum);

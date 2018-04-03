@@ -104,7 +104,6 @@ function loginUsuario(req, res) {
                         res.status(200).send({ usuario });
                     }                    
                 } else {
-                    console.log(check);
                     res.status(404).send({ mensaje: "La contraseña es incorrecta.", error: err });
                 }
             });
@@ -133,7 +132,6 @@ function editUsuario(req, res) {
             if (usuario) {
                 if (params.contrasenha) {
                     bcrypt.hash(params.contrasenha, null, null, function (err, hash) {
-                        console.log('contra');
                         usuario.contrasenha = hash;
 
                         if (params.nombre != usuario.nombre) {
@@ -162,7 +160,6 @@ function editUsuario(req, res) {
                             });
                     });
                 } else {
-                    console.log('sin contraseña');
                     if (params.nombre != usuario.nombre) {
                         usuario.nombre = params.nombre;
                     }

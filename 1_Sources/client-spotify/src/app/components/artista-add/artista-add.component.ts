@@ -3,7 +3,6 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { UsuarioService } from '../../services/usuario.services';
 import { ArtistaService } from '../../services/artista.service';
-import { Usuario } from '../../models/usuario';
 import { Artista } from '../../models/artista';
 import { GLOBAL } from '../../services/global';
 @Component({
@@ -13,7 +12,6 @@ import { GLOBAL } from '../../services/global';
   providers: [UsuarioService, ArtistaService]
 })
 export class ArtistaAddComponent implements OnInit {
-  public usuario: Usuario;
   public artista: Artista;
   public identity;
   public token;
@@ -36,8 +34,6 @@ export class ArtistaAddComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('Listado de artistas cargado.');
-
     if (this.identity.rol != 'admin') {
       this._router.navigate(['/artistas']);
     }

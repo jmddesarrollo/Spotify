@@ -12,7 +12,7 @@ var multipart = require('connect-multiparty');
 var mw_upload = multipart({ uploadDir: './uploads/canciones' });
 
 // Crear una ruta por GET con express
-api.get('/album/:id', mw_auth.ensureAuth, CancionController.getCancion);
+api.get('/cancion/:id', mw_auth.ensureAuth, CancionController.getCancion);
 api.get('/canciones/:id?', mw_auth.ensureAuth, CancionController.getCanciones);
 api.post('/cancion', mw_auth.ensureAuth, CancionController.nuevaCancion);
 api.put('/cancion/:id', mw_auth.ensureAuth, CancionController.editCancion);

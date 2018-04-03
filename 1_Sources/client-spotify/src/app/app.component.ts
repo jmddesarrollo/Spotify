@@ -51,15 +51,11 @@ export class AppComponent implements OnInit {
   onSubmit() {
     this.ocultarError();
 
-    console.log('Conectar');
-
     // Conseguir los datos de usuario.
     this._usuarioService.signup(this.usuario).subscribe(
       response => {
         let identity = response.usuario;
         this.identity = identity;
-
-        console.log(this.identity);
 
         if (!this.identity.id) {
           alert('El usuario no está identificado correctamente.');

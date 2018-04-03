@@ -81,11 +81,49 @@
   padding-bottom: 10px;
 }
 
-#artista-box{
+#artista-box, #album-box{
   padding: 25px;
   margin: 25px;
 }
 
-#artista-box img{
+#artista-box img, #album-box img {
   width: 250px;
+}
+
+.albums-list {
+  margin: 0px;
+  margin-top: 20px;
+  padding: 0px;
+  list-style: none;
+}
+
+.album-item {
+  width: 250px;
+  margin: 10px;
+  padding: 10px;
+  background: #222326;
+}
+
+.album-item img {
+  width: 100%;
+  padding-bottom: 10px;
+}
+
+.album-titulo {
+  padding-bottom: 10px;
+}
+
+
+.canciones-list {
+  margin: 0px;
+  padding: 0px;
+}
+
+.cancion-item {
+  list-style: none;
+  border-bottom: 1px solid #ccc;
+}
+
+.cancion-item .titulo{
+  padding: 12px;
 }

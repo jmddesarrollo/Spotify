@@ -91,9 +91,9 @@ function nuevaCancion(req, res) {
         nombre: params.nombre,
         duracion: params.duracion,
         archivo: null,
-        album_id: params.albumId
-    }).then(function (album) {
-        res.status(200).send({ album });
+        album_id: params.album_id
+    }).then(function (cancion) {
+        res.status(200).send({ cancion });
     }).catch(function (error) {
         console.log("Error producido nuevaCancion: " + error);
         res.status(500).send({ mensaje: "Se ha producido un error al añadir una canción.", error: error });

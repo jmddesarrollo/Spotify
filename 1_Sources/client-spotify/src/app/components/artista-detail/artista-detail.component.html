@@ -1,18 +1,36 @@
-<div id="artista-box" *ngIf="artista && identity" class="w3-container w3-panel w3-card">
+<div id="artista-box" *ngIf="artista && identity" class="w3-container w3-panel">
   <div class="w3-left">
     <img src="{{url + 'get-imagen-artista/' + artista.imagen}}" />
   </div>
-  
+
   <div class="w3-panel w3-left">
     <h1>{{artista.nombre}}</h1>
     <p>{{artista.descripcion}}</p>
     <div *ngIf="identity.rol == 'admin'">
-      <a [routerLink]="['/album',artista.id]" class="w3-btn w3-orange w3-round">Añadir album</a>
+      <a [routerLink]="['/crear-album', artista.id]" class="w3-btn w3-orange w3-round">Añadir album</a>
+    </div>
+  </div>
+</div>
+  <div class="w3-clear"></div>
+  
+  <div class="albums-list w3-container w3-panel w3-card" *ngIf="albums">
+    <div *ngFor="let album of albums" class="w3-left album-item w3-card-4 w3-text-white">
+
+      <img src="{{url + 'get-imagen-album/' + album.imagen}}" />
+
+      <div class="album-titulo w3-container">
+        <a [routerLink]="['/album',album.id]">{{album.titulo}}</a>        
+      </div>
+      <div *ngIf="identity.rol == 'admin'" class="w3-center">
+        <div *ngIf="confirmado != album.id">
+          <a [routerLink]="['/editar-album',album.id]" class="w3-btn w3-orange w3-round">Editar</a>
+          <a (click)="onDeleteConfirm(album.id)" class="w3-btn w3-red w3-round">Eliminar</a>
+        </div>
+      </div>
+      <div class="seguro w3-center" *ngIf="confirmado == album.id">
+        <a (click)="onDeleteAlbum(album.id)" class="w3-btn w3-red w3-round">Eliminar</a>
+        <a (click)="onCancelAlbum()" class="w3-btn w3-grey w3-round">Cancelar</a>
+      </div>
     </div>
   </div>
 
-  <div class="w3-clear"></div>
-  <div id="galeria_album" *ngIf="albums" class="w3-container w3-panel w3-card">
-
-  </div>
-</div>

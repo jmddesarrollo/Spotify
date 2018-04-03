@@ -92,7 +92,7 @@ function nuevoAlbum(req, res) {
         descripcion: params.descripcion,
         anho: params.anho,
         imagen: null,
-        artista_id: params.artistaId
+        artista_id: params.artista_id
     }).then(function (album) {
         res.status(200).send({ album });
     }).catch(function (error) {

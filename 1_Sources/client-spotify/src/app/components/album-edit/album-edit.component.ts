@@ -2,25 +2,26 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { UsuarioService } from '../../services/usuario.services';
-import { ArtistaService } from '../../services/artista.service';
+import { AlbumService } from '../../services/album.service';
 import { UploadService } from '../../services/upload.service';
 import { Usuario } from '../../models/usuario';
 import { Artista } from '../../models/artista';
+import { Album } from '../../models/album';
 import { GLOBAL } from '../../services/global';
 
 @Component({
-  selector: 'app-artista-edit',
-  templateUrl: '../artista-add/artista-add.component.html',
-  styleUrls: ['./artista-edit.component.css'],
-  providers: [UsuarioService, ArtistaService, UploadService]
+  selector: 'app-album-edit',
+  templateUrl: '../album-add/album-add.component.html',
+  styleUrls: ['./album-edit.component.css'],
+  providers: [UsuarioService, AlbumService, UploadService]
 })
 
-export class ArtistaEditComponent implements OnInit {
+export class AlbumEditComponent implements OnInit {
   public usuario: Usuario;
-  public artista: Artista;
+  public album: Album;
   public identity;
   public token;
-  public titulo: string;
+  public tituloAlbum: string;
   public mensajeAccion: string;
   public errorAccion: string;
   public url: string;
@@ -30,14 +31,14 @@ export class ArtistaEditComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _usuarioService: UsuarioService,
-    private _artistaService: ArtistaService,
+    private _albumService: AlbumService,
     private _uploadService: UploadService
   ) {
-    this.titulo = 'Editar artistas';
+    this.tituloAlbum = 'Editar album';
     this.identity = this._usuarioService.getIdentity();
     this.token = this._usuarioService.getToken();
     this.url = GLOBAL.url;
-    this.artista = new Artista(null, null, null, null);
+    this.album = new Album(null, null, null, null, null, null);
     this.is_edit = true;
   }
 
@@ -46,30 +47,33 @@ export class ArtistaEditComponent implements OnInit {
       this._router.navigate(['/artistas']);
     } else {
       // Conseguir el artista por su id.
-      this.getArtista();
+      this.getAlbum();
     }
   }
 
   onSubmit() {
-    this._artistaService.editArtista(this.token, this.artista).subscribe(
+    this._albumService.editAlbum(this.token, this.album).subscribe(
       response => {
-        if (response.artista) {
-          this.artista = response.artista;
+        if (response.album) {
+          this.album = response.album;
 
-          // Subir imagen del artista
-          this._uploadService.makeFileRequest(this.url + 'upload-imagen-artista/' + this.artista.id, [], this.filesToUpload, this.token, 'imagen')
-            .then(
-            result => {
-              this._router.navigate(['/artistas']);
-            },
-            error => {
-              console.log(error);
-            }
-            );
+          if (this.filesToUpload) {
+            // Subir imagen del album
+            this._uploadService.makeFileRequest(this.url + 'upload-imagen-album/' + this.album.id, [], this.filesToUpload, this.token, 'imagen')
+              .then(
+              result => {
+                this._router.navigate(['/artista', this.album.artista_id]);
+              },
+              error => {
+                console.log(error);
+              }
+              );
+          } 
 
-          this.mensajeAccion = 'El artista se ha actualizado correctamente.';
+          this.mensajeAccion = 'El album se ha actualizado correctamente.';
+
         } else {
-          this.errorAccion = 'Se ha producido un error en la edición del artista.';
+          this.errorAccion = 'Se ha producido un error en la edición del album.';
         }
       },
       error => {
@@ -83,16 +87,16 @@ export class ArtistaEditComponent implements OnInit {
     );
   }
 
-  getArtista() {
+  getAlbum() {
     this._route.params.forEach((params: Params) => {
       let id = params['id'];
 
-      this._artistaService.getArtista(this.token, id).subscribe(
+      this._albumService.getAlbum(this.token, id).subscribe(
         response => {
-          if (response.artista) {
-            this.artista = response.artista;            
+          if (response.album) {
+            this.album = response.album;
           } else {
-            this._router.navigate(['/']);            
+            this._router.navigate(['/']);
           }
         },
         error => {
@@ -114,3 +118,4 @@ export class ArtistaEditComponent implements OnInit {
     this.filesToUpload = <Array<File>>fileInput.target.files;
   }
 }
+

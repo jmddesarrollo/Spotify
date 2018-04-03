@@ -13,6 +13,11 @@ import { HomeComponent } from './components/home/home.component';
 import { ArtistaAddComponent } from './components/artista-add/artista-add.component';
 import { ArtistaEditComponent } from './components/artista-edit/artista-edit.component';
 import { ArtistaDetailComponent } from './components/artista-detail/artista-detail.component';
+import { AlbumAddComponent } from './components/album-add/album-add.component';
+import { AlbumEditComponent } from './components/album-edit/album-edit.component';
+import { AlbumDetailComponent } from './components/album-detail/album-detail.component';
+import { CancionAddComponent } from './components/cancion-add/cancion-add.component';
+import { CancionEditComponent } from './components/cancion-edit/cancion-edit.component';
 
 
 @NgModule({
@@ -23,7 +28,12 @@ import { ArtistaDetailComponent } from './components/artista-detail/artista-deta
     HomeComponent,
     ArtistaAddComponent,
     ArtistaEditComponent,
-    ArtistaDetailComponent
+    ArtistaDetailComponent,
+    AlbumAddComponent,
+    AlbumEditComponent,
+    AlbumDetailComponent,
+    CancionAddComponent,
+    CancionEditComponent
   ],
   imports: [
     BrowserModule,
