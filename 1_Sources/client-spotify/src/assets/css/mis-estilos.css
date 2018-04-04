@@ -2,6 +2,10 @@
   margin-top: 50px;
 }
 
+#div-identificacion {
+  margin-top: 80px;
+}
+
 #div-form-edit {
   max-width: 600px;
 }
@@ -126,4 +130,46 @@
 
 .cancion-item .titulo{
   padding: 12px;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+.player {
+  position: fixed;
+  background: #1C1C1F;
+  width: 100%;
+  bottom: 0px;
+  padding: 20px;
+  margin-left: -15px;
+  border-left: 1px solid #444;
+}
+
+.player .album-imagen {
+  float: left;
+  width: 138px;
+  height: 119px;
+  overflow: hidden;
+}
+
+.player .album-imagen img {
+  height: 100%;
+}
+
+.player .audio-file {
+  width: 85%;
+  height: 40px;
+  margin-left: 10px;
+  float: left;
+}
+
+.player audio {
+  width: 95%;
+  height: 40px;
+}
+
+#div-contenedor {
+  margin-bottom: 150px;
+  min-height: 650px;
 }

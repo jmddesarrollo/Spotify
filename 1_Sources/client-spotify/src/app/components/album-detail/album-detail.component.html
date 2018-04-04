@@ -14,7 +14,7 @@
     <ul id="canciones-list">
       <li *ngFor="let cancion of canciones" class="cancion-item">
         <div class="titulo">
-          <a class="w3-btn w3-green">
+          <a class="w3-btn w3-green" (click)="startPlayer(cancion)">
             <i class="fa fa-lg fa-play" title="Albumes"></i>
           </a>
           {{ cancion.numero + '. ' + cancion.nombre + ' - ' + cancion.duracion}}

@@ -13,7 +13,7 @@
 
   <div>
     <!-- Panel Lateral Izquierdo con menu de accesos a secciones del proyecto -->
-    <div id="contenedor-menu" class="w3-light-grey w3-sidebar" *ngIf="identity" [style.width]="(boolOcultaMenu) ? '55px' : '170px'" >
+    <div id="contenedor-menu" class="w3-light-grey w3-sidebar" *ngIf="identity" [style.width]="(boolOcultaMenu) ? '55px' : '170px'">
       <div (click)="mostrarMenu(!boolOcultaMenu)" class="btn-cursor w3-blue">
         <i class="fa fa-lg fa-angle-double-right" *ngIf="boolOcultaMenu"></i>
         <i class="fa fa-lg fa-angle-double-left w3-right" *ngIf="!boolOcultaMenu"></i>&nbsp;
@@ -25,8 +25,10 @@
         </a>
       </div>
       <div class="w3-hover-pale-blue">
-        <i class="fa fa-lg fa-cogs" title="Albumes"></i>
-        <span class="menu" *ngIf="!boolOcultaMenu">Albumes</span>
+        <a [routerLink]="['/album']">
+          <i class="fa fa-lg fa-cogs" title="Albumes"></i>
+          <span class="menu" *ngIf="!boolOcultaMenu">Albumes</span>
+        </a>
       </div>
       <div class="w3-hover-pale-blue">
         <a [routerLink]="['/mis-datos']" [routerLinkActive]="['actived']">
@@ -34,31 +36,17 @@
           <span class="menu" *ngIf="!boolOcultaMenu">Mis datos</span>
         </a>
       </div>
-      <div class="w3-hover-pale-blue">
-        <i class="fa fa-lg fa-bullhorn" title="Noticias"></i>
-        <span class="menu" *ngIf="!boolOcultaMenu">Noticias</span>
-      </div>
-      <div class="w3-hover-pale-blue">
-        <i class="fa fa-lg fa-users" title="Recursos"></i>
-        <span class="menu" *ngIf="!boolOcultaMenu">Recursos</span>
-      </div>
-      <div class="w3-hover-pale-blue">
-        <i class="fa fa-lg fa-archive" title="Adjuntos"></i>
-        <span class="menu" *ngIf="!boolOcultaMenu">Adjuntos</span>
-      </div>
-      <div class="w3-hover-pale-blue">
-        <i class="fa fa-lg fa-file" title="Informes"></i>
-        <span class="menu" *ngIf="!boolOcultaMenu">Informes</span>
-      </div>
     </div>
     <!-- Final del Panel Lateral Izquierdo -->
-
-    <div [class.hidden]="!identity" [style.padding-left]="(boolOcultaMenu) ? '60px' : '180px'" id="div-contenedor">            
+    <!-- Panel principal -->
+    <div *ngIf="identity" [style.padding-left]="(boolOcultaMenu) ? '60px' : '180px'" id="div-contenedor">
       <router-outlet></router-outlet>
+      <div class="w3-clear"></div>
+      <app-player class="player"></app-player>
     </div>
-
-
-    <div *ngIf="!identity" class="w3-container w3-row" [style.padding-left]="(boolOcultaMenu) ? '60px' : '180px'">
+    <!-- Final del Panel Principal -->
+    <!-- Panel de identificación -->
+    <div id="div-identificacion" *ngIf="!identity" class="w3-container w3-row" [style.padding-left]="(boolOcultaMenu) ? '60px' : '180px'">
       <div class="w3-half w3-panel w3-card intro-app">
         <div class="w3-blue w3-round-large w3-center">
           <h1>Identifícate</h1>
@@ -127,6 +115,7 @@
         </div>
       </div>
     </div>
+    <!-- Final del Panel de identificación -->
   </div>
 
   <div class="w3-clear"></div>

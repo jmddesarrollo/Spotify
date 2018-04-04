@@ -40,7 +40,7 @@ export class ArtistaDetailComponent implements OnInit {
     this.identity = this._usuarioService.getIdentity();
     this.token = this._usuarioService.getToken();
     this.url = GLOBAL.url;
-    this.artista = new Artista(null, null, null, null);
+    this.artista = new Artista(0, null, null, null);
     this.confirmado = null;
   }
 

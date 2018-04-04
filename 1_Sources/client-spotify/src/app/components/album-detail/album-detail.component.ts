@@ -3,10 +3,12 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { UsuarioService } from '../../services/usuario.services';
 import { AlbumService } from '../../services/album.service';
+import { ArtistaService } from '../../services/artista.service';
 import { CancionService } from '../../services/cancion.service';
 import { UploadService } from '../../services/upload.service';
 import { Usuario } from '../../models/usuario';
 import { Album } from '../../models/album';
+import { Artista } from '../../models/artista';
 import { Cancion } from '../../models/cancion';
 import { GLOBAL } from '../../services/global';
 
@@ -14,12 +16,13 @@ import { GLOBAL } from '../../services/global';
   selector: 'app-album-detail',
   templateUrl: './album-detail.component.html',
   styleUrls: ['./album-detail.component.css'],
-  providers: [UsuarioService, AlbumService, CancionService, UploadService]
+  providers: [UsuarioService, AlbumService, ArtistaService, CancionService, UploadService]
 })
 
 export class AlbumDetailComponent implements OnInit {
   public usuario: Usuario;
   public album: Album;
+  public artista: Artista;
   public canciones: Cancion[];
   public identity;
   public token;
@@ -35,6 +38,7 @@ export class AlbumDetailComponent implements OnInit {
     private _router: Router,
     private _usuarioService: UsuarioService,
     private _albumService: AlbumService,
+    private _artistaService: ArtistaService,
     private _cancionService: CancionService,
     private _uploadService: UploadService
   ) {
@@ -65,6 +69,23 @@ export class AlbumDetailComponent implements OnInit {
                   this.canciones = response.canciones;
                 } else {
                   this.mensajeAccion = 'Este album no tiene canciones asociadas.';
+                }
+              },
+              error => {
+                this.errorAccion = <any>error;
+
+                if (this.errorAccion) {
+                  var body = JSON.parse(error._body);
+                  this.errorAccion = body.mensaje;
+                }
+              }
+            );
+
+            // Sacar Artista
+            this._artistaService.getArtista(this.token, this.album.artista_id).subscribe(
+              response => {
+                if (response.artista) {
+                  this.artista = response.artista;
                 }
               },
               error => {
@@ -118,6 +139,21 @@ export class AlbumDetailComponent implements OnInit {
         }
       }
     );
+  }
+
+  startPlayer(cancion) {
+    let cancion_player = JSON.stringify(cancion);
+    let file_path = this.url + 'get-cancion-archivo/' + cancion.archivo;
+    let image_path = this.url + 'get-imagen-album/' + this.album.imagen;
+
+    localStorage.setItem('sound_song', cancion_player);
+    document.getElementById('mp3-source').setAttribute("src", file_path);
+    (document.getElementById('player') as any).load();
+    (document.getElementById('player') as any).play();
+
+    document.getElementById('play-cancion-titulo').innerHTML = cancion.nombre;
+    document.getElementById('play-cancion-artista').innerHTML = this.artista.nombre;
+    document.getElementById('play-imagen-album').setAttribute('src', this.url + 'get-imagen-album/' + this.album.imagen);
   }
 }
 
