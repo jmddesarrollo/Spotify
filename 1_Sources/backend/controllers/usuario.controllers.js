@@ -22,26 +22,9 @@ var Usuario = db.usuario;
 // Operandos
 var Op = Sequelize.Op;
 
-/*
- * Consultar todos los usuarios.
- */
-function getUsuarios(req, res) {
-    Usuario.findAll()
-        .then(function (usuarios) {
-            if (!usuarios) {
-                res.status(404).send({ mensaje: "No se ha encontrado usuarios." });
-            } else {
-                res.status(200).send({ usuarios });
-            }
-        })
-        .catch(function (error) {
-            console.log("Error producido en getUsuarios: " + error);
-            res.status(500).send({ mensaje: "Error al recuperar datos de los usuarios.", error: error });
-        });
-}
 
 /*
- * Añadir nueva estructura empresa
+ * Añadir nuevo usuario
  */
 function nuevoUsuario(req, res) {
     var contrasenha = '';
@@ -49,7 +32,7 @@ function nuevoUsuario(req, res) {
     var params = req.body;
 
     Usuario.find({
-        where: { email: params.email }
+        where: { email: params.email.toLowerCase() }
     })
         .then(function (usuario) {
             if (usuario) {
@@ -60,33 +43,33 @@ function nuevoUsuario(req, res) {
                         Usuario.create({
                             nombre: params.nombre,
                             apellidos: params.apellidos,
-                            email: params.email,
+                            email: params.email.toLowerCase(),
                             contrasenha: hash,
                             rol: 'usuario',
                             imagen: null
                         }).then(function (usuario) {
                             res.status(200).send({ usuario });
-                        }).catch(function (error) {
-                            console.log("Error producido usuario: saveUsuario " + error);
-                            res.status(500).send({ mensaje: "Se ha producido un error al añadir un usuario.", error: error });
+                        }).catch(function (error) {                            
+                            res.status(500).send({ mensaje: "Se ha producido un error al añadir el usuario." });
                         });
                     });
-
                 } else {
                     res.status(500).send({ mensaje: 'Se necesita contraseña.' });
                 }
             }
         })
-        .catch(function (error) {
-            console.log("Error producido en loginUsuario: " + error);
-            res.status(500).send({ mensaje: "Error al recuperar datos del usuario.", error: error });
+        .catch(function (error) {            
+            res.status(500).send({ mensaje: "Error al recuperar datos del usuario." });
         });
 }
 
+/*
+ * Acceso de usuario a la aplicación
+ */
 function loginUsuario(req, res) {
     var params = req.body;
 
-    var email = params.email;
+    var email = params.email.toLowerCase();
     var contrasenha = params.contrasenha;
 
     Usuario.find({
@@ -101,23 +84,66 @@ function loginUsuario(req, res) {
                         // Devolver un token de jwt
                         res.status(200).send({ token: jwt.createToken(usuario) });
                     } else {
+                        usuario.contrasenha = undefined;
                         res.status(200).send({ usuario });
                     }                    
                 } else {
-                    res.status(404).send({ mensaje: "La contraseña es incorrecta.", error: err });
+                    res.status(404).send({ mensaje: "La contraseña es incorrecta." });
                 }
-            });
-            
+            });            
         } else {
             res.status(404).send({ mensaje: "No se ha encontrado ningún usuario con ese email." });
         }
     })
-    .catch(function (error) {
-        console.log("Error producido en loginUsuario: " + error);
-        res.status(500).send({ mensaje: "Error al recuperar datos del usuario.", error: error });
+    .catch(function (error) {        
+        res.status(500).send({ mensaje: "Error al recuperar datos del usuario." });
     });
 }
 
+/*
+ * Consultar un usuario.
+ */
+function getUsuario(req, res) {
+    var usuarioId = req.params.id;
+
+    Usuario.findById(usuarioId)
+        .then(function (usuario) {
+            if (usuario) {
+                usuario.contrasenha = undefined;
+
+                res.status(200).send({ usuario });                
+            } else {
+                res.status(404).send({ mensaje: "No se ha encontrado usuarios." });
+            }
+        })
+        .catch(function (error) {            
+            res.status(500).send({ mensaje: "Error al recuperar datos del usuario." });
+        });
+}
+
+/*
+ * Consultar todos los usuarios.
+ */
+function getUsuarios(req, res) {
+    Usuario.findAll()
+        .then(function (usuarios) {
+            if (usuarios) {
+                usuarios.forEach(usuario => {
+                    usuario.contrasenha = undefined;
+                });
+                res.status(200).send({ usuarios });                
+            } else {
+                res.status(404).send({ mensaje: "No se ha encontrado usuarios." });
+            }
+        })
+        .catch(function (error) {            
+            res.status(500).send({ mensaje: "Error al recuperar datos de los usuarios." });
+        });
+}
+
+/*
+ * Modificar datos del usuario
+ */
 function editUsuario(req, res) {
     var usuarioId = req.params.id;
     var params = req.body;
@@ -146,17 +172,22 @@ function editUsuario(req, res) {
                         if (params.rol != usuario.rol) {
                             usuario.rol = params.rol;
                         }
-                        if (params.imagen != usuario.imagen) {
-                            usuario.imagen = params.imagen;
-                        }
+
                         // save recibe una función callback, con el posible error y el objeto que guarda.
                         usuario.save()
                             .then(function (usuario) {
                                 res.status(200).send({ usuario });
                             })
                             .catch(function (error) {
-                                console.log("Error producido en editUsuario: " + error);
-                                res.status(500).send({ mensaje: "Error al editar usuario. Seguramente el email ya esté dado de alta.", error: error });
+                                if (error.errors){
+                                    if (error.errors[0].message) {
+                                        res.status(500).send({ mensaje: error.errors[0].message }); 
+                                    } else {                                    
+                                        res.status(500).send({ mensaje: "Error al editar el usuario." });      
+                                    }                                
+                                } else {                                
+                                    res.status(500).send({ mensaje: "Error al editar usuario." });                                
+                                }                            
                             });
                     });
                 } else {
@@ -172,32 +203,46 @@ function editUsuario(req, res) {
                     if (params.rol != usuario.rol) {
                         usuario.rol = params.rol;
                     }
-                    if (params.imagen != usuario.imagen) {
-                        usuario.imagen = params.imagen;
-                    }
+
                     // save recibe una función callback, con el posible error y el objeto que guarda.
                     usuario.save()
                         .then(function (usuario) {
                             res.status(200).send({ usuario });
                         })
                         .catch(function (error) {
-                            console.log("Error producido en editUsuario: " + error);
-                            res.status(500).send({ mensaje: "Error al editar usuario. Seguramente el email ya esté dado de alta.", error: error });
+                            if (error.errors){
+                                if (error.errors[0].message) {
+                                    res.status(500).send({ mensaje: error.errors[0].message }); 
+                                } else {                                    
+                                    res.status(500).send({ mensaje: "Error al editar el usuario." });      
+                                }                                
+                            } else {                                
+                                res.status(500).send({ mensaje: "Error al editar usuario." });                                
+                            }                            
                         });
                 }
             } else {
                 res.status(404).send({ mensaje: "No se ha encontrado el usuario a editar." });
             }
         })
-        .catch(function (error) {
-            console.log("Error producido en editUsuario: " + error);
-            res.status(500).send({ mensaje: "Error al recuperar el usuario.", error: error });
+        .catch(function (error) {            
+            res.status(500).send({ mensaje: "Error al recuperar el usuario." });
         });
 }
 
+/*
+ * Añadir/Modificar imagen asociada al usuario
+ */
 function uploadImagen(req, res) {
     var usuarioId = req.params.id;
     var file_nombre = 'No subido ...';
+    var mensjae = "";
+
+    // Comprobar si el usuario a modificar es distinto del usuario conectado
+    if (usuarioId != req.usuario.sub) {        
+        mensaje = 'No tienes permiso para modificar este usuario.';
+        return removeImagen(res, file_ruta, mensaje);         
+    } 
 
     if (req.files) {
         var file_ruta = req.files.imagen.path;
@@ -206,7 +251,7 @@ function uploadImagen(req, res) {
         var name_split = file_nombre.split('\.');
         var file_ext = name_split[1];
 
-        if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'jpeg') {
+        if (file_ext === 'png' || file_ext === 'jpg' || file_ext === 'jpeg' || file_ext === 'gif') {
             Usuario.findById(usuarioId)
                 .then(function (usuario) {
                     if (usuario) {
@@ -217,26 +262,40 @@ function uploadImagen(req, res) {
                             .then(function (usuario) {
                                 res.status(200).send({ imagen: file_nombre, usuario });
                             })
-                            .catch(function (error) {
-                                console.log("Error producido en uploadImagen: " + error);
-                                res.status(500).send({ mensaje: "Se ha producido un error al guardar nombre de imagen.", error: error });
+                            .catch(function (error) {                                                                
+                                mensaje = 'Se ha producido un error al guardar nombre de imagen.';
+                                return removeImagen(res, file_ruta, mensaje);                                    
                             });                        
-                    } else {
-                        res.status(404).send({ mensaje: "No se ha encontrado el usuario a editar." });
+                    } else {                        
+                        mensaje = 'No se ha encontrado el usuario a modificar su imagen.';
+                        return removeImagen(res, file_ruta, mensaje);                        
                     }
                 })
-                .catch(function (error) {
-                    console.log("Error producido en updateImagen: " + error);
-                    res.status(500).send({ mensaje: "Error al recuperar el usuario.", error: error });
+                .catch(function (error) {                                        
+                    mensaje = 'Error al recuperar el usuario para modificar su imagen.';
+                    return removeImagen(res, file_ruta, mensaje);                     
                 });
         } else {
-            res.status(200).send({ mensaje: 'Extensión no válida.' });
+            mensaje = 'Extensión de archivo no válida.';
+            return removeImagen(res, file_ruta, mensaje); 
         }
     } else {
-        res.status(200).send({ mensaje: 'No se ha subido ninguna imagen.' } );
+        res.status(200).send({ mensaje: 'No se ha encontrado ninguna imagen a subir.' } );
     }
 }
 
+/*
+ * Eliminar un archivo de la ruta
+ */
+function removeImagen(res, file_ruta, mensaje) {
+    fs.unlink(file_ruta, (err) => {
+        return res.status(200).send({mensaje: mensaje});
+    });
+}
+
+/*
+ * Recoger imagen del usuario
+ */
 function getImagenFile(req, res) {
     var imagenFile = req.params.imagenFile;
     var rutaImagen = './uploads/usuarios/' + imagenFile;
@@ -250,10 +309,11 @@ function getImagenFile(req, res) {
     });
 }
 
-module.exports = {
-    getUsuarios,
+module.exports = {    
     nuevoUsuario,
     loginUsuario,
+    getUsuario,
+    getUsuarios,
     editUsuario,
     uploadImagen,
     getImagenFile

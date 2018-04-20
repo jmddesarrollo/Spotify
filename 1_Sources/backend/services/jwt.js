@@ -2,11 +2,15 @@
 
 var jwt = require('jwt-simple');
 var moment = require('moment');
+
+// Variable secreta para añadir al token y aumentar la seguridad.
 var secret = 'clave_secreta';
 
 exports.createToken = function (usuario) {
     // sub: id del objeto
     // name: nombre del objeto
+    // iat: fecha de creación del token
+    // exp: fecha de expiración del token (30 días)
     var payload = {
         sub: usuario.id,
         nombre: usuario.nombre,
