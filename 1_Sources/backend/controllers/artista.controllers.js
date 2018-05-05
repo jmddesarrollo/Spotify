@@ -205,6 +205,64 @@ function getImagenFile(req, res) {
     });
 }
 
+/*
+ * Consultar un artista.
+ */
+function getArtistaAlbumsCanciones(req, res) {
+    var artistaId = req.params.id;
+
+    Artista.findById(artistaId)
+        .then(function (artista) {    
+            if (artista) {
+                getAlbumsCanciones(artista.id).then((value) => {
+                    res.status(200).send({ artista, albums: value.albumes, canciones: value.canciones });
+                })
+                
+            } else {
+                res.status(404).send({ mensaje: "No se ha encontrado el artista." });                
+            }
+        })
+        .catch(function (error) {
+            console.log("Error producido en getArtista: " + error);
+            res.status(500).send({ mensaje: "Error al recuperar datos del artista.", error: error });
+        });
+}
+
+
+/*
+ * Función asincrona para recoger albums 
+ */
+ async function getAlbumsCanciones(artistaId) {
+    var albumes = await Album.findAll({ where: {artista_id: artistaId}, order: [['anho', 'ASC'], ['titulo', 'ASC']] })
+        .then(function (albums) {
+            if (albums) {
+                return albums;
+            } else {
+                return null;
+            }
+        })
+        .catch(function (error) {
+            return null;
+        });
+
+    var canciones = await Cancion.findAll({ where: {artistas_id: artistaId}, order: [['album_id', 'ASC'], ['numero', 'ASC'], ['nombre', 'ASC']] })
+        .then(function (cancions) {
+            if (cancions) {
+                return cancions;
+            } else {
+                return null;
+            }
+        })
+        .catch(function (error) {
+            return null;
+        });  
+
+        return {
+            albumes,
+            canciones
+        }      
+ }
+
 module.exports = {
     getArtista,
     getArtistas,
@@ -212,5 +270,6 @@ module.exports = {
     editArtista,
     delArtista,
     uploadImagen,
-    getImagenFile
+    getImagenFile,
+    getArtistaAlbumsCanciones
 }
