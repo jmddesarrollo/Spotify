@@ -206,7 +206,7 @@ function getImagenFile(req, res) {
 }
 
 /*
- * Consultar un artista.
+ * Consultar un artista con sus albums y canciones.
  */
 function getArtistaAlbumsCanciones(req, res) {
     var artistaId = req.params.id;
@@ -230,7 +230,7 @@ function getArtistaAlbumsCanciones(req, res) {
 
 
 /*
- * Función asincrona para recoger albums 
+ * Función asincrona para recoger albums y canciones del artista
  */
  async function getAlbumsCanciones(artistaId) {
     var albumes = await Album.findAll({ where: {artista_id: artistaId}, order: [['anho', 'ASC'], ['titulo', 'ASC']] })
