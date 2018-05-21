@@ -1,0 +1,42 @@
+	<div class="albums-list w3-container w3-panel w3-card" *ngIf="albums">
+		<div *ngFor="let album of albums" class="w3-left album-item w3-card-4 w3-text-white">
+		  <img src="{{url + 'get-imagen-album/' + album.imagen}}" />
+
+		  <div class="album-titulo w3-container">
+		    <a [routerLink]="['/album',album.id]">{{album.titulo}}</a>        
+		  </div>
+		  <div>
+		  	<span>{{ ('2017-08-27') | amLocale:'es' | amTimeAgo }}</span>
+		  </div>
+
+		  <div *ngIf="identity.rol == 'admin'" class="w3-center">
+		    <div *ngIf="confirmado != album.id">
+		      <a [routerLink]="['/editar-album', album.id]" class="w3-btn w3-orange w3-round">Editar</a>
+		      <a (click)="onDeleteConfirm(album.id)" class="w3-btn w3-red w3-round">Eliminar</a>
+
+		      <!-- Botón para probar ng-template -->
+		      <a (mouseenter)="mouseEnter(album.id)" (mouseleave)="mouseLeave(album.id)" class="w3-btn w3-green w3-round w3-margin-top" [class.w3-red]="album.id == condicion">
+		        <span *ngIf="album.id != condicion; else delete">Siguiendo</span>
+		        <ng-template #delete>
+		          <span>Dejar de seguir</span>
+		        </ng-template>
+		      </a>     
+		      <!-- Fin Botón para probar ng-template -->     
+		    </div>
+		  </div>
+		  <div class="seguro w3-center" *ngIf="confirmado == album.id">
+		    <a (click)="onDeleteAlbum(album.id)" class="w3-btn w3-red w3-round">Eliminar</a>
+		    <a (click)="onCancelAlbum()" class="w3-btn w3-grey w3-round">Cancelar</a>
+		  </div>
+		</div>
+	</div>
+
+<div>
+	<app-practicahijo [propiedad_a_hijo]="identity" (propiedad_a_padre)="recibirDatos($event)" ></app-practicahijo>
+
+	<div *ngIf="datos_del_hijo">
+		Datos del Hijo a Padre:
+		<p>{{datos_del_hijo.nombre}}</p>
+		<p>{{datos_del_hijo.email}}</p>
+	</div>
+</div>

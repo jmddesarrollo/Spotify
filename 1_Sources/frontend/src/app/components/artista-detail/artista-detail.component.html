@@ -24,7 +24,7 @@
       <div *ngIf="identity.rol == 'admin'" class="w3-center">
         <div *ngIf="confirmado != album.id">
           <a [routerLink]="['/editar-album',album.id]" class="w3-btn w3-orange w3-round">Editar</a>
-          <a (click)="onDeleteConfirm(album.id)" class="w3-btn w3-red w3-round">Eliminar</a>
+          <a (click)="onDeleteConfirm(album.id)" class="w3-btn w3-red w3-round">Eliminar</a>    
         </div>
       </div>
       <div class="seguro w3-center" *ngIf="confirmado == album.id">

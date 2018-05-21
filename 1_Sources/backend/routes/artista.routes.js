@@ -19,6 +19,6 @@ api.put('/artista/:id', mw_auth.ensureAuth, ArtistaController.editArtista);
 api.delete('/artista/:id', mw_auth.ensureAuth, ArtistaController.delArtista);
 api.post('/upload-imagen-artista/:id', [mw_auth.ensureAuth, mw_upload], ArtistaController.uploadImagen);
 api.get('/get-imagen-artista/:imagenFile', ArtistaController.getImagenFile);
-api.get('/artista-total/:id', ArtistaController.getArtistaAlbumsCanciones);
+api.get('/artista-info-total/:id', mw_auth.ensureAuth, ArtistaController.getArtistaAlbumsCanciones);
 
 module.exports = api;

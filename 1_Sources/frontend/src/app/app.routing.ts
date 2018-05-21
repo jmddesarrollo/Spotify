@@ -20,6 +20,9 @@ import { AlbumDetailComponent } from './components/album-detail/album-detail.com
 import { CancionAddComponent } from './components/cancion-add/cancion-add.component';
 import { CancionEditComponent } from './components/cancion-edit/cancion-edit.component';
 
+// Import componente de practicas
+import { PracticaComponent } from './components/practica/practica.component';
+
 const appRoutes: Routes = [
   // { path: '', redirectTo: '/artistas', pathMatch: 'full' },
   { path: '', component: HomeComponent },
@@ -33,6 +36,7 @@ const appRoutes: Routes = [
   { path: 'album/:id', component: AlbumDetailComponent },
   { path: 'crear-cancion/:albumid', component: CancionAddComponent },
   { path: 'editar-cancion/:id', component: CancionEditComponent },
+  { path: 'practica', component: PracticaComponent },
   { path: '**', component: HomeComponent }
 ];
 

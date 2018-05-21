@@ -1,45 +1,23 @@
   <!-- Panel Título con proyecto seleccionado -->
-  <div class="w3-blue w3-container w3-center" id="div-titulo">
-    <h4>
-      <i class="fa fa-codiepie"></i>
-      MusicFy
-      <button class="cursor w3-right info-log" (click)="logout()" title="Cerrar sesión"><i class="fa fa-sign-out"></i></button>
-      <span *ngIf="identity" id="identity_name" class="w3-right info-log">
-        {{identity.nombre}}
-      </span>
-      <img *ngIf="identity" src="{{url}}get-imagen-usuario/{{identity.imagen}}" id="img-logged" class="w3-circle w3-right info-log" />
-    </h4>
-  </div>
+
+
+<div class="w3-bar w3-blue">
+  <div class="w3-bar-item w3-mobile cursor" [routerLink]="['/']"><i class="fa fa-codiepie"></i>MusicFy</div>
+  <a *ngIf="identity" [routerLink]="['/artistas']" [routerLinkActive]="['actived']" class="w3-bar-item w3-button w3-mobile cursor">Artistas</a>
+  <a *ngIf="identity" [routerLink]="['/practica']" href="#" class="w3-bar-item w3-button w3-mobile">Albumes</a>
+  <div class="w3-dropdown-hover w3-mobile w3-right" *ngIf="identity">
+    <img *ngIf="identity" src="{{url}}get-imagen-usuario/{{identity.imagen}}" id="img-logged" class="w3-circle info-log" />
+    <button class="w3-button">{{identity.nombre}}</button>
+    <div class="w3-dropdown-content w3-bar-block w3-card-4">
+      <a [routerLink]="['/mis-datos']" class="w3-bar-item w3-button">Mis datos</a>
+      <a href="#" (click)="logout()" class="w3-bar-item w3-button">Salir</a>
+    </div>
+  </div>  
+</div>   
 
   <div>
-    <!-- Panel Lateral Izquierdo con menu de accesos a secciones del proyecto -->
-    <div id="contenedor-menu" class="w3-light-grey w3-sidebar" *ngIf="identity" [style.width]="(boolOcultaMenu) ? '55px' : '170px'">
-      <div (click)="mostrarMenu(!boolOcultaMenu)" class="btn-cursor w3-blue">
-        <i class="fa fa-lg fa-angle-double-right" *ngIf="boolOcultaMenu"></i>
-        <i class="fa fa-lg fa-angle-double-left w3-right" *ngIf="!boolOcultaMenu"></i>&nbsp;
-      </div>
-      <div class="w3-hover-pale-blue">
-        <a [routerLink]="['/artistas']" [routerLinkActive]="['actived']">
-          <i class="fa fa-lg fa-info-circle" title="Artistas"></i>
-          <span class="menu" *ngIf="!boolOcultaMenu">Artistas</span>
-        </a>
-      </div>
-      <div class="w3-hover-pale-blue">
-        <a [routerLink]="['/album']">
-          <i class="fa fa-lg fa-cogs" title="Albumes"></i>
-          <span class="menu" *ngIf="!boolOcultaMenu">Albumes</span>
-        </a>
-      </div>
-      <div class="w3-hover-pale-blue">
-        <a [routerLink]="['/mis-datos']" [routerLinkActive]="['actived']">
-          <i class="fa fa-lg fa-signal" title="Mis datos"></i>
-          <span class="menu" *ngIf="!boolOcultaMenu">Mis datos</span>
-        </a>
-      </div>
-    </div>
-    <!-- Final del Panel Lateral Izquierdo -->
     <!-- Panel principal -->
-    <div *ngIf="identity" [style.padding-left]="(boolOcultaMenu) ? '60px' : '180px'" id="div-contenedor">
+    <div *ngIf="identity" id="div-contenedor">
       <router-outlet></router-outlet>
       <div class="w3-clear"></div>
       <app-player class="player"></app-player>
@@ -59,8 +37,8 @@
           <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
             <p>
               <label>Correo electrónico:</label>
-              <input type="email" #email="ngModel" name="email" [(ngModel)]="usuario.email" class="w3-input w3-animate-input" required />
-              <span *ngIf="!email.valid && email.touched" class="w3-text-red">El email es obligatorio.</span>
+              <input type="email" #email="ngModel" name="email" [(ngModel)]="usuario.email" class="w3-input w3-animate-input" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" />
+              <span *ngIf="!email.valid && email.touched" class="w3-text-red">El email no tiene formato correcto.</span>
             </p>
             <p>
               <label>Contraseña:</label>

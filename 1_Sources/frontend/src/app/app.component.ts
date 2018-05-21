@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DoCheck } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { GLOBAL } from './services/global';
@@ -14,7 +14,7 @@ import { NgLocaleLocalization } from '@angular/common/src/i18n/localization';
   styleUrls: ['./app.component.css'],
   providers: [UsuarioService]	
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, DoCheck {
   public titulo = 'MusicaFy';
   public usuario: Usuario;
   public usuario_registro: Usuario;
@@ -63,29 +63,7 @@ export class AppComponent implements OnInit {
           // Crear elemento en el localStorage para tener al usuario en sesión
           localStorage.setItem('identity', JSON.stringify(identity));
 
-          // Conseguir el token para enviarselo a cada petición
-          this._usuarioService.signup(this.usuario, 'true').subscribe(
-            response => {
-              let token = response.token;
-              this.token = token;
-
-              if (this.token.lenght <= 0) {
-                alert('El token no se ha generado correctamente.');
-              } else {
-                localStorage.setItem('token', token);
-                this.usuario = new Usuario(null, '', '', '', '', '', '');
-              }
-            },
-            error => {
-              this.errorMensaje = <any>error;
-
-              if (this.errorMensaje) {
-                var body = JSON.parse(error._body);
-                this.errorMensaje = body.mensaje;
-                console.log(error);
-              }
-            }
-          );
+          this.getToken();         
         }
       },
       error => {
@@ -94,6 +72,32 @@ export class AppComponent implements OnInit {
         if (this.errorMensaje) {
           var body = JSON.parse(error._body);
           this.errorMensaje = body.mensaje;
+        }
+      }
+    );
+  }
+
+  // Conseguir el token para enviarselo a cada petición
+  getToken() {    
+    this._usuarioService.signup(this.usuario, 'true').subscribe(
+      response => {
+        let token = response.token;
+        this.token = token;
+
+        if (this.token.lenght <= 0) {
+          alert('El token no se ha generado correctamente.');
+        } else {
+          localStorage.setItem('token', token);
+          this.usuario = new Usuario(null, '', '', '', '', '', '');
+        }
+      },
+      error => {
+        this.errorMensaje = <any>error;
+
+        if (this.errorMensaje) {
+          var body = JSON.parse(error._body);
+          this.errorMensaje = body.mensaje;
+          console.log(error);
         }
       }
     );
@@ -135,9 +139,15 @@ export class AppComponent implements OnInit {
   logout() {        
     localStorage.removeItem('identity');
     localStorage.removeItem('token');
+    // localStorage.clear();
 
     this.identity = null;
     this.token = null;
     this._router.navigate(['/']);
+  }
+
+  // Método para refrescar alguna variable cuando haya un cambio en el componente.
+  ngDoCheck() {
+    this.identity = this._usuarioService.getIdentity();
   }
 }

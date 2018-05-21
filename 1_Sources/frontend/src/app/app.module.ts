@@ -6,6 +6,11 @@ import { HttpModule } from '@angular/http';
 // Necesario para las rutas
 import { routing, appRoutingProviders } from './app.routing';
 
+// Necesario para trabajo con fechas. Pipes.
+import { MomentModule } from 'ngx-moment';
+// https://github.com/urish/ngx-moment
+
+// Componentes
 import { AppComponent } from './app.component';
 import { UsuarioeditComponent } from './components/usuarioedit/usuarioedit.component';
 import { ArtistaListComponent } from './components/artista-list/artista-list.component';
@@ -19,6 +24,8 @@ import { AlbumDetailComponent } from './components/album-detail/album-detail.com
 import { CancionAddComponent } from './components/cancion-add/cancion-add.component';
 import { CancionEditComponent } from './components/cancion-edit/cancion-edit.component';
 import { PlayerComponent } from './components/player/player.component';
+import { PracticaComponent } from './components/practica/practica.component';
+import { PracticahijoComponent } from './components/practicahijo/practicahijo.component';
 
 
 @NgModule({
@@ -35,13 +42,16 @@ import { PlayerComponent } from './components/player/player.component';
     AlbumDetailComponent,
     CancionAddComponent,
     CancionEditComponent,
-    PlayerComponent
+    PlayerComponent,
+    PracticaComponent,
+    PracticahijoComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    routing
+    routing,
+    MomentModule
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]
